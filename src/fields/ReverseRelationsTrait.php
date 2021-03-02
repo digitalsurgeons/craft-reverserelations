@@ -47,7 +47,6 @@ trait ReverseRelationsTrait
         parent::init();
 
         $this->allowLimit = false;
-        $this->sortable = false;
     }
 
     /**
@@ -96,7 +95,9 @@ trait ReverseRelationsTrait
         // Loop through sources
         /** @var ElementInterface $source */
         foreach ($sources as $source) {
-            $target = $source->getFieldValue($field->handle)->anyStatus();
+            $target = $source->getFieldValue($field->handle)
+                ->anyStatus()
+                ->orderBy(['sortOrder' => SORT_ASC]);
 
             // Set this element on that element
             $this->saveRelations(
@@ -192,7 +193,7 @@ trait ReverseRelationsTrait
 
             if (!(new Query())->select('id')->from(Table::RELATIONS)->where($criteria)->exists()) {
                 Craft::$app->getDb()->createCommand()
-                    ->insert(Table::RELATIONS, array_merge($criteria, ['sortOrder' => 1]))
+                    ->insert(Table::RELATIONS, array_merge($criteria, ['sortOrder' => $sortOrder]))
                     ->execute();
             }
         }

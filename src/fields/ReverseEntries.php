@@ -59,6 +59,10 @@ class ReverseEntries extends Entries
                 ],
             ]);
 
+            if ($this->sortable) {
+                $query->orderBy(['relations.sortOrder' => SORT_ASC]);
+            }
+
             $inputSourceIds = $this->inputSourceIds();
             if ($inputSourceIds != '*') {
                 $query->where(['entries.sectionId' => $inputSourceIds]);
